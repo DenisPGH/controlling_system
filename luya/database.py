@@ -13,9 +13,9 @@ class DataBaseSensor:
 
     def drop_table(self,table:str):
         """
-       delete table in the db
+       delete table from the db
        :param table: name of the table
-        :return:
+        :return: nothing
         """
         self.cur.execute(f''' DROP TABLE {table}''')
         self.con.commit()
@@ -24,7 +24,7 @@ class DataBaseSensor:
         """
         create new table in DB where to store each new values
         :param table: name of the table
-        :return:
+        :return: nothing
         """
         self.cur.execute(f'''CREATE TABLE {table}
                          (id integer primary key,
@@ -34,7 +34,7 @@ class DataBaseSensor:
 
     def print_all_info_from_table(self):
         """
-        return all info from the db-node table
+        return all info from the db table
         :return: nothing
         """
         self.cur.execute(f"select * from {self.NAME_TABLE}")
@@ -44,10 +44,10 @@ class DataBaseSensor:
             print(node)
         return
 
-    def adding__new_date(self, date:str, temperature:float):
+    def adding__new_data(self, date:str, temperature:float):
         """
-        create a new row
-        :param date: str '2023-01-08 01:00'
+        create a new row into table from database
+        :param date: str '2023-01-08 01:00:00'
         :param temperature: float
         :return:
         """
@@ -65,9 +65,9 @@ class DataBaseSensor:
 
     def clear_table(self,table):
         """
-        clear the rows into table
+        clear the information from the table
         :param table: name of the table
-        :return:
+        :return: nothing
         """
         self.cur.execute(f"""DELETE FROM {table}""")
         self.con.commit()
