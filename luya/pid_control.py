@@ -12,13 +12,13 @@ class PIDTemperature:
         self.Ki_heat = 0
         self.Kd_heat = 0
         self.OUTPUT_LIMITS_MIN_HEAT=1
-        self.OUTPUT_LIMITS_MAX_HEAT=40000 # Hz
+        self.OUTPUT_LIMITS_MAX_HEAT=20000 # Hz
         # fan
         self.Kp_fan = 1
         self.Ki_fan = 0
         self.Kd_fan = 0
         self.OUTPUT_LIMITS_MIN_FAN = 1
-        self.OUTPUT_LIMITS_MAX_FAN = 40000 # Hz
+        self.OUTPUT_LIMITS_MAX_FAN = 20000 # Hz
 
 
 

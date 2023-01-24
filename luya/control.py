@@ -7,40 +7,62 @@ import RPi.GPIO as GPIO
 
 class Actuator:
     def __init__(self):
+        self.MAX_FREQUENCY=20000 # Hz limit from the AOD4184
+        self.MIN_FREQUENCY=0 # Hz limit from the AOD4184
+
+        self.MAX_DUTY_CYCLE = 100  # %
+        self.MIN_DUTY_CYCLE = 0  # %
+
         self.GPIO_PWM_NUMBER=0
-        self.INITIAL_START_VALUE_PWM=0
-        self.INITIAL_DUTY_CYCLE_PWM=1
+        self.INITIAL_START_VALUE_PWM=0 # Hz
+        self.INITIAL_DUTY_CYCLE_PWM=1 # 0-100 %
         self.gpio=GPIO.setmode(GPIO.BOARD)
+
+
+
+
+    def start_actuator_for_work(self):
+        """
+        this function initial and get ready the actuator for work
+        :return:
+        """
         self.gpio.setup(self.GPIO_PWM_NUMBER, GPIO.OUT)
-
-        self.actuator= GPIO.PWM(self.GPIO_PWM_NUMBER, self.INITIAL_START_VALUE_PWM)
-        # self.heat = GPIO.PWM(self.PWM_HEAT, self.INITIAL_START_VALUE_PWM)
-
-
-
-    def control_fan(self,frequency:int):
-        """
-        controling the pwm for the cooling element
-        :param frequency: int 0-40kHz
-        :return:
-        """
-
-        self.fan.start(self.INITIAL_DUTY_CYCLE_PWM)
-        self.fan.ChangeFrequency(frequency)
-        self.fan.stop()
+        self.actuator = GPIO.PWM(self.GPIO_PWM_NUMBER, self.INITIAL_START_VALUE_PWM)
+        self.actuator.start(self.INITIAL_DUTY_CYCLE_PWM)
         return
 
 
-    def control_heat(self,frequency:int):
+    def control(self,frequency:float,duty_cycle=1):
         """
-        controling the pwm for the heating element
-         :param frequency: int 0-40kHz
+        :param frequency: set the actuator of the new value
+        :param duty_cycle: working percent
         :return:
-                """
-        self.heat.start(self.INITIAL_DUTY_CYCLE_PWM)
-        self.heat.ChangeFrequency(frequency)
-        self.heat.stop()
+        """
+        if not self.MIN_FREQUENCY<=frequency <=self.MAX_FREQUENCY:
+            raise ValueError(f"The frequency must be between {self.MIN_FREQUENCY} and {self.MAX_FREQUENCY}")
+        if not self.MIN_DUTY_CYCLE<=duty_cycle <=self.MAX_DUTY_CYCLE:
+            raise ValueError(f"The duty cycle must be between {self.MIN_DUTY_CYCLE} and {self.MAX_DUTY_CYCLE}")
+
+        self.actuator.ChangeDutyCycle(duty_cycle)
+        self.actuator.ChangeFrequency(frequency)
         return
+
+    def stop_actuator(self):
+        """
+        when stop work, just stop the pwm
+        :return:
+        """
+        self.actuator.stop()
+        return
+
+    def clean_up_pwm(self):
+        """ Clean up the system"""
+        self.gpio.cleanup()
+
+
+
+
+
 
 
 class ActuatorFan(Actuator):
